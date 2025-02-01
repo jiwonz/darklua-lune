@@ -4,7 +4,7 @@ description = "darklua + lune scriptable CLI interface"
 authors = ["jiwonz <me@jiwonz.kr>", "jeparlefrancais <jeparlefrancais21@gmail.com>"]
 repository = "https://github.com/jiwonz/darklua-lune"
 license = "MIT"
-includes = ["LICENSE", "pesde.toml", "README.md", "src"]
+includes = ["LICENSE", "pesde.toml", "README.md", "src/**"]
 
 [target]
 environment = "lune"
