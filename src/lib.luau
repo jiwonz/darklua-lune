@@ -18,10 +18,7 @@ local function handleDarkluaProcessResult(result: process.SpawnResult)
 	end
 end
 
-local configType = gt.build(gt.opt(gt.union(
-	gt.anyTable(),
-	gt.string()
-)))
+local configType = gt.build(gt.opt(gt.union(gt.anyTable(), gt.string())))
 function darklua.process(
 	input: typeof(stringType:type()),
 	output: typeof(stringType:type()),
@@ -55,39 +52,35 @@ function darklua.process(
 	handleDarkluaProcessResult(result)
 end
 
-local formatType = gt.build(gt.union(
-	gt.literal("json"),
-	gt.literal("json5"),
-	gt.literal("yaml"),
-	gt.literal("toml")
-))
+local formatType = gt.build(gt.union(gt.literal("json"), gt.literal("json5"), gt.literal("yaml"), gt.literal("toml")))
 local optionalStringType = gt.build(gt.opt(gt.string()))
-darklua.convert = (function(
-	input: typeof(stringType:type()),
-	output: typeof(optionalStringType:type()),
-	format: typeof(formatType:type())
-): string?
-	stringType:assert(input)
-	optionalStringType:assert(output)
-	formatType:assert(format)
+darklua.convert = (
+	function(
+		input: typeof(stringType:type()),
+		output: typeof(optionalStringType:type()),
+		format: typeof(formatType:type())
+	): string?
+		stringType:assert(input)
+		optionalStringType:assert(output)
+		formatType:assert(format)
 
-	local result = process.spawn("darklua", {
-		"convert",
-		input,
-		output or nil :: any,
-		"--format",
-		format,
-	}, {
-		stdio = "forward",
-	})
-	handleDarkluaProcessResult(result)
+		local result = process.spawn("darklua", {
+			"convert",
+			input,
+			output or nil :: any,
+			"--format",
+			format,
+		}, {
+			stdio = "forward",
+		})
+		handleDarkluaProcessResult(result)
 
-	if output then
-		return result.stdout
-	end
-	return
-end :: any) :: ((input: string, output: string, format: typeof(formatType:type())) -> ()) &
-	((input: string, output: nil, format: typeof(formatType:type())) -> string)
+		if output then
+			return result.stdout
+		end
+		return
+	end :: any
+) :: ((input: string, output: string, format: typeof(formatType:type())) -> ()) & ((input: string, output: nil, format: typeof(formatType:type())) -> string)
 
 local optionalNumberType = gt.build(gt.opt(gt.number()))
 function darklua.minify(
