@@ -3,6 +3,7 @@ local stdio = require("@lune/stdio")
 local serde = require("@lune/serde")
 local dirs = require("../lune_packages/dirs")
 local gt = require("../lune_packages/greentea")
+local pesdeExec = require("../lune_packages/pesde_exec")
 
 local ERROR_PREFIX = `{stdio.color("red")}{stdio.style("bold")}error{stdio.color("reset")}:`
 
@@ -46,9 +47,7 @@ function darklua.process(
 		end
 	end
 
-	local result = process.spawn("darklua", args, {
-		stdio = "forward",
-	})
+	local result = pesdeExec("darklua", args, true)
 	handleDarkluaProcessResult(result)
 end
 
@@ -64,15 +63,13 @@ darklua.convert = (
 		optionalStringType:assert(output)
 		formatType:assert(format)
 
-		local result = process.spawn("darklua", {
+		local result = pesdeExec("darklua", {
 			"convert",
 			input,
 			output or nil :: any,
 			"--format",
 			format,
-		}, {
-			stdio = "forward",
-		})
+		}, true)
 		handleDarkluaProcessResult(result)
 
 		if output then
@@ -102,9 +99,7 @@ function darklua.minify(
 		table.insert(args, tostring(columnSpan))
 	end
 
-	local result = process.spawn("darklua", args, {
-		stdio = "forward",
-	})
+	local result = pesdeExec("darklua", args, true)
 	handleDarkluaProcessResult(result)
 end
 
