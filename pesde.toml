@@ -13,9 +13,6 @@ lib = "src/lib.luau"
 [indices]
 default = "https://github.com/pesde-pkg/index"
 
-[scripts]
-typegen = "scripts/typegen.luau"
-
 [peer_dependencies]
 darklua = { name = "pesde/darklua", version = "^0.16.0" }
 
