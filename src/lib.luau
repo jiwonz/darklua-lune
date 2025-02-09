@@ -47,7 +47,9 @@ function darklua.process(
 		end
 	end
 
-	local result = pesdeExec("darklua", args, true)
+	local result = pesdeExec("darklua", args, {
+		stdio = "inherit",
+	})
 	handleDarkluaProcessResult(result)
 end
 
@@ -69,7 +71,9 @@ darklua.convert = (
 			output or nil :: any,
 			"--format",
 			format,
-		}, true)
+		}, {
+			stdio = "inherit",
+		})
 		handleDarkluaProcessResult(result)
 
 		if output then
@@ -99,7 +103,9 @@ function darklua.minify(
 		table.insert(args, tostring(columnSpan))
 	end
 
-	local result = pesdeExec("darklua", args, true)
+	local result = pesdeExec("darklua", args, {
+		stdio = "inherit",
+	})
 	handleDarkluaProcessResult(result)
 end
 
