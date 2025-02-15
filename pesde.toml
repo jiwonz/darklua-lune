@@ -1,5 +1,5 @@
 name = "jiwonz/darklua_lune"
-version = "0.1.3"
+version = "0.1.4"
 description = "darklua + lune scriptable CLI interface"
 authors = ["jiwonz <me@jiwonz.kr>"]
 repository = "https://github.com/jiwonz/darklua-lune"
@@ -17,9 +17,9 @@ default = "https://github.com/pesde-pkg/index"
 darklua = { name = "pesde/darklua", version = "^0.16.0" }
 
 [dependencies]
-dirs = { name = "jiwonz/dirs", version = "^0.3.0" }
+dirs = { name = "jiwonz/dirs", version = "^0.4.0" }
 greentea = { name = "corecii/greentea", version = "^0.4.11" }
 pesde_exec = { name = "jiwonz/pesde_exec", version = "^0.4.2" }
 
 [dev_dependencies]
-luau_check = { name = "jiwonz/luau_check", version = "^0.3.7" }
+luau_check = { name = "jiwonz/luau_check", version = "^0.3.8" }

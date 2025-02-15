@@ -23,7 +23,8 @@ local configType = gt.build(gt.opt(gt.union(gt.anyTable(), gt.string())))
 function darklua.process(
 	input: typeof(stringType:type()),
 	output: typeof(stringType:type()),
-	config: typeof(configType:type())
+	config: typeof(configType:type()),
+	spawnOptions: process.SpawnOptions?
 )
 	stringType:assert(input)
 	stringType:assert(output)
@@ -47,9 +48,7 @@ function darklua.process(
 		end
 	end
 
-	local result = pesdeExec("darklua", args, {
-		stdio = "inherit",
-	})
+	local result = pesdeExec("darklua", args, spawnOptions)
 	handleDarkluaProcessResult(result)
 end
 
@@ -59,7 +58,8 @@ darklua.convert = (
 	function(
 		input: typeof(stringType:type()),
 		output: typeof(optionalStringType:type()),
-		format: typeof(formatType:type())
+		format: typeof(formatType:type()),
+		spawnOptions: process.SpawnOptions?
 	): string?
 		stringType:assert(input)
 		optionalStringType:assert(output)
@@ -71,9 +71,7 @@ darklua.convert = (
 			output or nil :: any,
 			"--format",
 			format,
-		}, {
-			stdio = "inherit",
-		})
+		}, spawnOptions)
 		handleDarkluaProcessResult(result)
 
 		if output then
@@ -87,7 +85,8 @@ local optionalNumberType = gt.build(gt.opt(gt.number()))
 function darklua.minify(
 	input: typeof(stringType:type()),
 	output: typeof(stringType:type()),
-	columnSpan: typeof(optionalNumberType:type())
+	columnSpan: typeof(optionalNumberType:type()),
+	spawnOptions: process.SpawnOptions?
 )
 	stringType:assert(input)
 	stringType:assert(output)
@@ -103,9 +102,7 @@ function darklua.minify(
 		table.insert(args, tostring(columnSpan))
 	end
 
-	local result = pesdeExec("darklua", args, {
-		stdio = "inherit",
-	})
+	local result = pesdeExec("darklua", args, spawnOptions)
 	handleDarkluaProcessResult(result)
 end
 
