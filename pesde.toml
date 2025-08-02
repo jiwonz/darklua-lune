@@ -13,13 +13,10 @@ lib = "src/lib.luau"
 [indices]
 default = "https://github.com/pesde-pkg/index"
 
-[peer_dependencies]
-darklua = { name = "pesde/darklua", version = "^0.16.0" }
+[engines]
+lune = "^0.9.4"
+pesde = "^0.7.0-rc.1"
 
 [dependencies]
-dirs = { name = "jiwonz/dirs", version = "^0.4.0" }
+dirs = { name = "jiwonz/dirs", version = "^0.5.1" }
 greentea = { name = "corecii/greentea", version = "^0.4.11" }
-pesde_exec = { name = "jiwonz/pesde_exec", version = "^0.4.2" }
-
-[dev_dependencies]
-luau_check = { name = "jiwonz/luau_check", version = "^0.3.8" }

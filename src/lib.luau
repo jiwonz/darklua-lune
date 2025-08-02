@@ -3,7 +3,6 @@ local stdio = require("@lune/stdio")
 local serde = require("@lune/serde")
 local dirs = require("../lune_packages/dirs")
 local gt = require("../lune_packages/greentea")
-local pesdeExec = require("../lune_packages/pesde_exec")
 
 local ERROR_PREFIX = `{stdio.color("red")}{stdio.style("bold")}error{stdio.color("reset")}:`
 
@@ -17,7 +16,7 @@ local stringType = gt.build(gt.string())
 ]=]
 local darklua = {}
 
-local function handleDarkluaProcessResult(result: process.SpawnResult)
+local function handleDarkluaProcessResult(result: process.ExecResult)
 	if not result.ok then
 		stdio.ewrite(`{ERROR_PREFIX} darklua process failure.\n\nstdout: {result.stdout}\n\nstderr: {result.stderr}\n`)
 		process.exit(1)
@@ -38,7 +37,7 @@ function darklua.process(
 	input: typeof(stringType:type()),
 	output: typeof(stringType:type()),
 	config: typeof(configType:type()),
-	spawnOptions: process.SpawnOptions?
+	spawnOptions: process.ExecOptions?
 )
 	stringType:assert(input)
 	stringType:assert(output)
@@ -62,7 +61,7 @@ function darklua.process(
 		end
 	end
 
-	local result = pesdeExec("darklua", args, spawnOptions)
+	local result = process.exec("darklua", args, spawnOptions)
 	handleDarkluaProcessResult(result)
 end
 
@@ -82,13 +81,13 @@ darklua.convert = (
 		input: typeof(stringType:type()),
 		output: typeof(optionalStringType:type()),
 		format: typeof(formatType:type()),
-		spawnOptions: process.SpawnOptions?
+		spawnOptions: process.ExecOptions?
 	): string?
 		stringType:assert(input)
 		optionalStringType:assert(output)
 		formatType:assert(format)
 
-		local result = pesdeExec("darklua", {
+		local result = process.exec("darklua", {
 			"convert",
 			input,
 			output or nil :: any,
@@ -117,7 +116,7 @@ function darklua.minify(
 	input: typeof(stringType:type()),
 	output: typeof(stringType:type()),
 	columnSpan: typeof(optionalNumberType:type()),
-	spawnOptions: process.SpawnOptions?
+	spawnOptions: process.ExecOptions?
 )
 	stringType:assert(input)
 	stringType:assert(output)
@@ -133,7 +132,7 @@ function darklua.minify(
 		table.insert(args, tostring(columnSpan))
 	end
 
-	local result = pesdeExec("darklua", args, spawnOptions)
+	local result = process.exec("darklua", args, spawnOptions)
 	handleDarkluaProcessResult(result)
 end
 
