@@ -1,7 +1,7 @@
 # darklua-lune
 darklua + lune scriptable CLI interface
 
-[Docs](https://jiwonz.github.io/lune-darklua/)
+[Docs](https://jiwonz.github.io/darklua-lune/)
 
 ## Prerequisites
 - **lune**: `^0.10.2`

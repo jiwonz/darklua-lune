@@ -1,8 +1,15 @@
-# Setup
-[Readme](https://github.com/jiwonz/darklua-lune/blob/main/README.md) | [Docs](https://jiwonz.github.io/lune-darklua/)
+# Example Usage
 
-## Installation
-via [pesde](https://pesde.dev/packages/jiwonz/darklua_lune)
-```sh
-pesde add darklua_lune
+```lua
+local darklua = require("@pkg/darklua")
+
+darklua.process("src.luau", "out.luau", {
+	rules = {
+		"remove_empty_do",
+	}
+})
+
+darklua.convert("src.lua", "out.json", "json")
+
+darklua.minify("src.luau", "out.luau")
 ```
