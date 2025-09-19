@@ -5,5 +5,5 @@ experimental = true
 "github:JohnnyMorganz/StyLua" = "latest"
 "github:JohnnyMorganz/luau-lsp" = "latest"
 "github:Kampfkarren/selene" = "latest"
-"github:seaofvoices/darklua" = "latest"
+"github:seaofvoices/darklua" = "0.17.1"
 node = "18"
