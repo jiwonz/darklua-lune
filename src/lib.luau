@@ -2,7 +2,7 @@ local process = require("@lune/process")
 local stdio = require("@lune/stdio")
 local serde = require("@lune/serde")
 local dirs = require("../lune_packages/dirs")
-local gt = require("../lune_packages/greentea")
+local gt = require("../luau_packages/greentea")
 
 local ERROR_PREFIX = `{stdio.color("red")}{stdio.style("bold")}error{stdio.color("reset")}:`
 
@@ -11,7 +11,6 @@ local stringType = gt.build(gt.string())
 --[=[
 	@class darklua
 
-	# darklua-lune
 	darklua + lune scriptable CLI interface
 ]=]
 local darklua = {}
@@ -26,6 +25,8 @@ end
 
 local configType = gt.build(gt.opt(gt.union(gt.anyTable(), gt.string())))
 --[=[
+	@within darklua
+
 	Processes a Lua file with DarkLua, applying the specified configuration.
 
 	@param input -- The input Lua file to process.
@@ -39,9 +40,9 @@ function darklua.process(
 	config: typeof(configType:type()),
 	spawnOptions: process.ExecOptions?
 )
-	stringType:assert(input)
-	stringType:assert(output)
-	configType:assert(config)
+	assert(stringType(input))
+	assert(stringType(output))
+	assert(configType(config))
 
 	local args = {
 		"process",
@@ -68,43 +69,48 @@ end
 local formatType = gt.build(gt.union(gt.literal("json"), gt.literal("json5"), gt.literal("yaml"), gt.literal("toml")))
 local optionalStringType = gt.build(gt.opt(gt.string()))
 --[=[
+	@within darklua
+
 	Converts a Lua file to a specified format using DarkLua.
 
 	@param input -- The input Lua file to convert.
 	@param output -- The output file where the converted code will be written. If nil, the result is returned as a string.
 	@param format -- The format to convert the Lua code into (e.g., "json", "json5", "yaml", "toml").
 	@param spawnOptions -- Optional spawn options for the process execution.
-	@return -- If output is nil, returns the converted code as a string; otherwise, writes to the output file.
+	@return string? -- If output is nil, returns the converted code as a string; otherwise, writes to the output file.
 ]=]
+local function convert(
+	input: typeof(stringType:type()),
+	output: typeof(optionalStringType:type()),
+	format: typeof(formatType:type()),
+	spawnOptions: process.ExecOptions?
+): string?
+	assert(stringType(input))
+	assert(optionalStringType(output))
+	assert(formatType(format))
+
+	local result = process.exec("darklua", {
+		"convert",
+		input,
+		output or nil :: any,
+		"--format",
+		format,
+	}, spawnOptions)
+	handleDarkluaProcessResult(result)
+
+	if output then
+		return result.stdout
+	end
+	return
+end
 darklua.convert = (
-	function(
-		input: typeof(stringType:type()),
-		output: typeof(optionalStringType:type()),
-		format: typeof(formatType:type()),
-		spawnOptions: process.ExecOptions?
-	): string?
-		stringType:assert(input)
-		optionalStringType:assert(output)
-		formatType:assert(format)
-
-		local result = process.exec("darklua", {
-			"convert",
-			input,
-			output or nil :: any,
-			"--format",
-			format,
-		}, spawnOptions)
-		handleDarkluaProcessResult(result)
-
-		if output then
-			return result.stdout
-		end
-		return
-	end :: any
+	convert :: any
 ) :: ((input: string, output: string, format: typeof(formatType:type())) -> ()) & ((input: string, output: nil, format: typeof(formatType:type())) -> string)
 
 local optionalNumberType = gt.build(gt.opt(gt.number()))
 --[=[
+	@within darklua
+
 	Minifies a Lua file using DarkLua.
 
 	@param input -- The input Lua file to minify.
@@ -118,9 +124,9 @@ function darklua.minify(
 	columnSpan: typeof(optionalNumberType:type()),
 	spawnOptions: process.ExecOptions?
 )
-	stringType:assert(input)
-	stringType:assert(output)
-	optionalNumberType:assert(columnSpan)
+	assert(stringType(input))
+	assert(stringType(output))
+	assert(optionalNumberType(columnSpan))
 
 	local args = {
 		"minify",
@@ -135,5 +141,7 @@ function darklua.minify(
 	local result = process.exec("darklua", args, spawnOptions)
 	handleDarkluaProcessResult(result)
 end
+
+table.freeze(darklua)
 
 return darklua

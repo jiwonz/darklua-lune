@@ -4,7 +4,7 @@ description = "darklua + lune scriptable CLI interface"
 authors = ["jiwonz <me@jiwonz.kr>"]
 repository = "https://github.com/jiwonz/darklua-lune"
 license = "MIT"
-includes = ["LICENSE", "pesde.toml", "README.md", "src/**"]
+includes = ["LICENSE", "pesde.toml", "README.md", "src/**", "docs/**"]
 
 [target]
 environment = "lune"
@@ -14,9 +14,9 @@ lib = "src/lib.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [engines]
-lune = "^0.9.4"
-pesde = "^0.7.0-rc.1"
+lune = "^0.10.2"
+pesde = "^0.7.1"
 
 [dependencies]
-dirs = { name = "jiwonz/dirs", version = "^0.5.1" }
-greentea = { name = "corecii/greentea", version = "^0.4.11" }
+dirs = { name = "jiwonz/dirs", version = "^0.6.0" }
+greentea = { name = "jiwonz/greentea_luau", version = "^0.2.0", target = "luau" }
