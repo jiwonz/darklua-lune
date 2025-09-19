@@ -11,7 +11,6 @@ local stringType = gt.build(gt.string())
 --[=[
 	@class darklua
 
-	# darklua-lune
 	darklua + lune scriptable CLI interface
 ]=]
 local darklua = {}
@@ -80,31 +79,32 @@ local optionalStringType = gt.build(gt.opt(gt.string()))
 	@param spawnOptions -- Optional spawn options for the process execution.
 	@return string? -- If output is nil, returns the converted code as a string; otherwise, writes to the output file.
 ]=]
+local function convert(
+	input: typeof(stringType:type()),
+	output: typeof(optionalStringType:type()),
+	format: typeof(formatType:type()),
+	spawnOptions: process.ExecOptions?
+): string?
+	assert(stringType(input))
+	assert(optionalStringType(output))
+	assert(formatType(format))
+
+	local result = process.exec("darklua", {
+		"convert",
+		input,
+		output or nil :: any,
+		"--format",
+		format,
+	}, spawnOptions)
+	handleDarkluaProcessResult(result)
+
+	if output then
+		return result.stdout
+	end
+	return
+end
 darklua.convert = (
-	function(
-		input: typeof(stringType:type()),
-		output: typeof(optionalStringType:type()),
-		format: typeof(formatType:type()),
-		spawnOptions: process.ExecOptions?
-	): string?
-		assert(stringType(input))
-		assert(optionalStringType(output))
-		assert(formatType(format))
-
-		local result = process.exec("darklua", {
-			"convert",
-			input,
-			output or nil :: any,
-			"--format",
-			format,
-		}, spawnOptions)
-		handleDarkluaProcessResult(result)
-
-		if output then
-			return result.stdout
-		end
-		return
-	end :: any
+	convert :: any
 ) :: ((input: string, output: string, format: typeof(formatType:type())) -> ()) & ((input: string, output: nil, format: typeof(formatType:type())) -> string)
 
 local optionalNumberType = gt.build(gt.opt(gt.number()))

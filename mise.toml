@@ -6,3 +6,4 @@ experimental = true
 "github:JohnnyMorganz/luau-lsp" = "latest"
 "github:Kampfkarren/selene" = "latest"
 "github:seaofvoices/darklua" = "latest"
+node = "18"
