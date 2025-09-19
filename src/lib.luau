@@ -66,6 +66,7 @@ function darklua.process(
 	handleDarkluaProcessResult(result)
 end
 
+type ConvertibleFormat = "json" | "json5" | "yaml" | "toml"
 local formatType = gt.build(gt.union(gt.literal("json"), gt.literal("json5"), gt.literal("yaml"), gt.literal("toml")))
 local optionalStringType = gt.build(gt.opt(gt.string()))
 --[=[
@@ -82,7 +83,7 @@ local optionalStringType = gt.build(gt.opt(gt.string()))
 local function convert(
 	input: typeof(stringType:type()),
 	output: typeof(optionalStringType:type()),
-	format: typeof(formatType:type()),
+	format: ConvertibleFormat,
 	spawnOptions: process.ExecOptions?
 ): string?
 	assert(stringType(input))
@@ -105,7 +106,7 @@ local function convert(
 end
 darklua.convert = (
 	convert :: any
-) :: ((input: string, output: string, format: typeof(formatType:type())) -> ()) & ((input: string, output: nil, format: typeof(formatType:type())) -> string)
+) :: ((input: string, output: string, format: ConvertibleFormat) -> ()) & ((input: string, output: nil, format: ConvertibleFormat) -> string)
 
 local optionalNumberType = gt.build(gt.opt(gt.number()))
 --[=[
