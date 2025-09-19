@@ -4,6 +4,7 @@ darklua + lune scriptable CLI interface
 [Docs](https://jiwonz.github.io/darklua-lune/)
 
 ## Prerequisites
+- **darklua**: `^0.17.1`
 - **lune**: `^0.10.2`
 
 ## Installation
