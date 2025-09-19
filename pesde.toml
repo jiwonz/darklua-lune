@@ -1,5 +1,5 @@
 name = "jiwonz/darklua_lune"
-version = "0.2.0"
+version = "0.3.0"
 description = "darklua + lune scriptable CLI interface"
 authors = ["jiwonz <me@jiwonz.kr>"]
 repository = "https://github.com/jiwonz/darklua-lune"
